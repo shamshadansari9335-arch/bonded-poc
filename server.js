@@ -1,3 +1,4 @@
+require("dotenv").config();
 const http = require("http");
 const redis = require("redis");
 
@@ -24,10 +25,10 @@ const server = http.createServer(async (req, res) => {
   }
   res.writeHead(200);
   res.end(
-    `Hello from Bonded POC!\nEnvironment: ${process.env.APP_ENV || "local"}\nVisits: ${visits}\n`
+    `Hello from Bonded POC!\nEnvironment: ${process.env.APP_ENV || "local"}\nVersion: ${process.env.APP_VERSION || "unknown"}\nVisits: ${visits}\n`
   );
 });
 
 server.listen(process.env.PORT || 8080, () => {
-  console.log("Server running!");
+  console.log("Server running on port", process.env.PORT || 8080);
 });
