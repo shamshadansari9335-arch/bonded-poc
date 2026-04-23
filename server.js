@@ -2,15 +2,23 @@ const http = require("http");
 const redis = require("redis");
 
 const client = redis.createClient({
-  url: process.env.REDIS_URL || "redis://localhost:6379"
+  url: process.env.REDIS_URL || "redis://localhost:6379",
+  socket: {
+    connectTimeout: 1000,
+    reconnectStrategy: false
+  }
 });
 
-client.connect().catch(console.error);
+client.connect().catch(() => {
+  console.log("Redis not available - using fallback");
+});
 
 const server = http.createServer(async (req, res) => {
-  let visits = 0;
+  let visits = "N/A (no Redis)";
   try {
-    visits = await client.incr("visits");
+    if (client.isReady) {
+      visits = await client.incr("visits");
+    }
   } catch (e) {
     visits = "Redis not connected";
   }
