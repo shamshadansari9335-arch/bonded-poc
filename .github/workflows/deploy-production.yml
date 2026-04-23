@@ -1,4 +1,4 @@
-name: Deploy to Cloud Run
+name: Deploy to Cloud Run (Production)
 
 on:
   push:
@@ -7,12 +7,16 @@ on:
 
 env:
   GAR_LOCATION: us-west1
-  SERVICE: bonded-poc
+  SERVICE: bonded-poc-production
   REGION: us-west1
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://bonded-poc-production.us-west1.run.app
+
     permissions:
       contents: read
       id-token: write
